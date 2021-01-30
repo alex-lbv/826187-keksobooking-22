@@ -1,6 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Александр Лебедев](https://up.htmlacademy.ru/javascript/22/user/826187).
+
 * Наставник: [Белик Павел](https://htmlacademy.ru/profile/id84572).
 
 ---
