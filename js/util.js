@@ -1,4 +1,4 @@
-const getRandomNumber = (min, max) => {
+export const getRandomNumber = (min, max) => {
   if (min < 0 || max < 0) {
     throw new Error('Отрицательные значения запрещены');
   } else if (min > max) {
@@ -12,7 +12,7 @@ const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const getRandomFloatNumber = (min, max, digits = 1) => {
+export const getRandomFloatNumber = (min, max, digits = 1) => {
   if (min < 0 || max < 0) {
     throw new Error('Отрицательные значения запрещены');
   } else if (min > max) {
@@ -25,7 +25,7 @@ const getRandomFloatNumber = (min, max, digits = 1) => {
   return random.toFixed(digits);
 };
 
-const getRandomArrayElement = (array) => array[getRandomNumber(0, array.length - 1)];
+export const getRandomArrayElement = (array) => array[getRandomNumber(0, array.length - 1)];
 
 const getShuffledArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -34,7 +34,7 @@ const getShuffledArray = (array) => {
   }
 };
 
-const getRandomLengthArray = (array) => {
+export const getRandomLengthArray = (array) => {
   getShuffledArray(array.slice(0));
 
   let randomLengthArray = array.slice(getRandomNumber(0, array.length - 1));
@@ -45,5 +45,3 @@ const getRandomLengthArray = (array) => {
 
   return randomLengthArray;
 };
-
-export {getRandomNumber,getRandomFloatNumber,getRandomArrayElement,getRandomLengthArray};

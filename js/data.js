@@ -9,6 +9,12 @@ const MAX_PRICE = 1000000;
 const MIN_USER_COUNT = 1;
 const MAX_USER_COUNT = 8;
 const SIMILAR_OFFER_COUNT = 10;
+const MIN_LOCATION_X = 35.65000;
+const MAX_LOCATION_X = 35.70000;
+const MIN_LOCATION_Y = 139.70000;
+const MAX_LOCATION_Y = 139.80000;
+const COUNT_DIGITS_AFTER_POINT = 5;
+
 const TIMES = [
   '12:00',
   '13:00',
@@ -37,8 +43,8 @@ const OfferType = {
 
 const createOffer = () => {
   const location = {
-    x: getRandomFloatNumber(35.65000, 35.70000, 5),
-    y: getRandomFloatNumber(139.70000, 139.80000, 5),
+    x: getRandomFloatNumber(MIN_LOCATION_X, MAX_LOCATION_X, COUNT_DIGITS_AFTER_POINT),
+    y: getRandomFloatNumber(MIN_LOCATION_Y, MAX_LOCATION_Y, COUNT_DIGITS_AFTER_POINT),
   };
   const type = getRandomArrayElement(Object.keys(OfferType));
 
@@ -66,7 +72,4 @@ const createOffer = () => {
   }
 };
 
-const similarOffer = new Array(SIMILAR_OFFER_COUNT).fill(null).map(createOffer);
-
-const getSimilarOffer = () => similarOffer;
-getSimilarOffer();
+export const similarOffers = new Array(SIMILAR_OFFER_COUNT).fill(null).map(createOffer);
