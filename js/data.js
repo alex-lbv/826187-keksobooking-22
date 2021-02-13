@@ -33,8 +33,8 @@ const PHOTO_LINKS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg',
 ];
-const DESCRIPTION = 'Описание помещения';
-const OfferType = {
+const DESCRIPTION = 'Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.';
+export const OfferType = {
   'palace': 'Дворец',
   'flat': 'Квартира',
   'house': 'Дом',
@@ -53,7 +53,7 @@ const createOffer = () => {
       avatar: `img/avatars/user0${getRandomNumber(MIN_USER_COUNT, MAX_USER_COUNT)}.png`,
     },
     offer: {
-      title: Object.values(OfferType[type]).join(''),
+      title: `${Object.values(OfferType[type]).join('')} с потрясающим видом из окна`,
       address: `${location.x}, ${location.y}`,
       price: getRandomNumber(MIN_PRICE, MAX_PRICE),
       type: type,
