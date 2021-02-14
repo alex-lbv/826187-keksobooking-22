@@ -16,14 +16,14 @@ const changePriceOffer = () => {
   priceOffer.placeholder = minPrice[typeOffer.value];
 };
 
-const changeTimeOffer = (firstElement, secondElement) => {
-  firstElement.value = secondElement.value;
+const changeTimeOutOffer = () => {
+  timeOutOffer.value = timeInOffer.value;
+};
+
+const changeTimeInOffer = () => {
+  timeInOffer.value = timeOutOffer.value;
 };
 
 typeOffer.addEventListener('input', changePriceOffer);
-timeInOffer.addEventListener('input', () => {
-  changeTimeOffer(timeOutOffer, timeInOffer);
-});
-timeOutOffer.addEventListener('input', () => {
-  changeTimeOffer(timeInOffer, timeOutOffer);
-});
+timeInOffer.addEventListener('input', changeTimeOutOffer);
+timeOutOffer.addEventListener('input', changeTimeInOffer);
