@@ -1,11 +1,10 @@
-import {similarOffers, OfferType} from './data.js';
+import {OfferType} from './data.js';
 import {makeElement, changeEndOfWords} from './util.js';
 
-const similarListElement = document.querySelector('#map-canvas');
 const similarOfferTemplate = document.querySelector('#card').content.querySelector('.popup');
-const similarListFragment = document.createDocumentFragment();
 
-similarOffers.forEach(({offer, author}) => {
+export const renderOffer = (point) => {
+  const {author, offer} = point;
   const offerElement = similarOfferTemplate.cloneNode(true);
 
   const offerTitle = offerElement.querySelector('.popup__title');
@@ -18,7 +17,7 @@ similarOffers.forEach(({offer, author}) => {
   (offer.price) ? offerPrice.textContent = `${offer.price} ₽/ночь` : offerPrice.remove();
 
   const offerType = offerElement.querySelector('.popup__type');
-  (offer.type) ? offerType.textContent = Object.values(OfferType[offer.type]).join('')
+  (offer.type.length) ? offerType.textContent = Object.values(OfferType[offer.type]).join('')
     : offerType.remove();
 
   const offerRoomsAndGuests = offerElement.querySelector('.popup__text--capacity');
@@ -26,10 +25,12 @@ similarOffers.forEach(({offer, author}) => {
     offerRoomsAndGuests.textContent =
       `${offer.rooms} ${changeEndOfWords(offer.rooms, ['комната', 'комнаты', 'комнат'])}
     для ${offer.guests} ${changeEndOfWords(offer.guests, ['гостя', 'гостей', 'гостей'])}`;
-  } else offerRoomsAndGuests.remove();
+  } else {
+    offerRoomsAndGuests.remove();
+  }
 
   const offerTime = offerElement.querySelector('.popup__text--time');
-  (offer.checkin && offer.checkout) ? offerTime.textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`
+  (offer.checkin.length && offer.checkout.length) ? offerTime.textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`
     : offerTime.remove();
 
   const offerDescription = offerElement.querySelector('.popup__description');
@@ -40,7 +41,7 @@ similarOffers.forEach(({offer, author}) => {
   (author.avatar) ? offerAvatar.src = author.avatar : offerAvatar.remove();
 
   const photoList = offerElement.querySelector('.popup__photos');
-  if (offer.photos) {
+  if (offer.photos.length) {
     photoList.innerHTML = '';
 
     for (let i = 0; i <= offer.photos.length - 1; i++) {
@@ -50,23 +51,21 @@ similarOffers.forEach(({offer, author}) => {
       photo.alt = 'Фотография жилья';
       photoList.appendChild(photo);
     }
-  } else photoList.remove();
+  } else {
+    photoList.remove();
+  }
 
   const featuresList = offerElement.querySelector('.popup__features');
-  if (offer.features) {
+  if (offer.features.length) {
     featuresList.innerHTML = '';
 
     for (let i = 0; i <= offer.features.length - 1; i++) {
       const feature = makeElement('li', 'popup__feature', `popup__feature--${offer.features[i]}`);
       featuresList.appendChild(feature);
     }
-  } else featuresList.remove();
+  } else {
+    featuresList.remove();
+  }
 
-  similarListFragment.appendChild(offerElement);
-});
-
-export const renderOffer = (numberOffer) => {
-  similarListElement.appendChild(similarListFragment.children[numberOffer]);
+  return offerElement;
 };
-
-renderOffer(0);
