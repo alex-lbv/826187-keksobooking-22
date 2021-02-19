@@ -1,8 +1,13 @@
-const formOffer = document.querySelector('.ad-form');
+import {validationInputCapacity} from './validation.js';
+
+export const formOffer = document.querySelector('.ad-form');
 const typeOffer = formOffer.querySelector('#type');
 const priceOffer = formOffer.querySelector('#price');
 const timeInOffer = formOffer.querySelector('#timein');
 const timeOutOffer = formOffer.querySelector('#timeout');
+export const formAddress = formOffer.querySelector('#address');
+export const roomsNumber = formOffer.querySelector('#room_number');
+export const roomsCapacity = formOffer.querySelector('#capacity');
 
 const minPrice = {
   bungalow: 0,
@@ -56,6 +61,19 @@ export const activeStatePage = () => {
   enabledField(mapFilters, mapFiltersFields);
 };
 
-inactiveStatePage();
+roomsNumber.addEventListener('input', () => {
+  validationInputCapacity(roomsNumber, roomsCapacity);
+})
 
-export const formAddress = formOffer.querySelector('#address');
+roomsCapacity.addEventListener('input', () => {
+  validationInputCapacity(roomsNumber, roomsCapacity);
+})
+
+formOffer.addEventListener('change', () => {
+  changePriceOffer();
+  changeTimeOutOffer();
+  changeTimeInOffer();
+  validationInputCapacity(roomsNumber, roomsCapacity);
+})
+
+inactiveStatePage();
