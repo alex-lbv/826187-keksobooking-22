@@ -125,7 +125,6 @@ resetButton.addEventListener('click', (evt) => {
 })
 
 const onSuccess = () => {
-  // showMessage('Данные успешно отправлены');
   showModal(modalSuccessTemplate);
   defaultFormState();
 };

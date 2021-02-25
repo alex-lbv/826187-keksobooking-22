@@ -1,4 +1,4 @@
-import {showMessage} from './modal.js';
+import {modalErrorTemplate, showModal} from './modal.js';
 
 const URL_GET_DATA = 'https://22.javascript.pages.academy/keksobooking/data';
 const URL_POST_DATA = 'https://22.javascript.pages.academy/keksobooking';
@@ -29,8 +29,8 @@ export const setUserFormSubmit = (form, onSuccess) => {
       },
     )
       .then((response) => {
-        (response.ok) ? onSuccess() : showMessage('Ошибка. Попробуйте ещё раз');
+        (response.ok) ? onSuccess() : showModal(modalErrorTemplate);;
       })
-      .catch(() => showMessage('Ошибка. Попробуйте ещё раз'));
+      .catch(() => showModal(modalErrorTemplate));
   })
 };

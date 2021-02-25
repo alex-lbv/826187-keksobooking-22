@@ -2,6 +2,12 @@ import {isEscEvent} from './util.js';
 
 const MESSAGE_SHOW_TIME = 5000;
 
+const mainDocument = document.querySelector('main');
+export const modalSuccessTemplate = document.querySelector('#success')
+  .content.querySelector('.success');
+export const modalErrorTemplate = document.querySelector('#error')
+  .content.querySelector('.error');
+
 export const showMessage = (message) => {
   const messageContainer = document.createElement('div');
   messageContainer.style.position = 'fixed';
@@ -24,10 +30,6 @@ export const showMessage = (message) => {
   }, MESSAGE_SHOW_TIME)
 };
 
-const mainDocument = document.querySelector('main');
-export const modalSuccessTemplate = document.querySelector('#success')
-  .content.querySelector('.success');
-
 export const showModal = (template) => {
   const modal = template.cloneNode(true);
   mainDocument.append(modal);
@@ -35,20 +37,25 @@ export const showModal = (template) => {
   document.addEventListener('click', onPopupClick);
 };
 
-const closeModal = (modalName) => {
-  const modal = mainDocument.querySelector(modalName);
+const closeModal = (modal) => {
   modal.remove();
   document.removeEventListener('keydown', onPopupEscKeydown);
   document.removeEventListener('click', onPopupClick);
 };
 
+const checkPopup = () => {
+  const modalError = document.querySelector('.error');
+  const modalSuccess = document.querySelector('.success');
+  modalSuccess ? closeModal(modalSuccess) : closeModal(modalError);
+};
+
 const onPopupEscKeydown = (evt) => {
   if (isEscEvent(evt)) {
     evt.preventDefault();
-    closeModal('.success');
+    checkPopup()
   }
 };
 
 const onPopupClick = () => {
-  closeModal('.success');
+  checkPopup();
 };
