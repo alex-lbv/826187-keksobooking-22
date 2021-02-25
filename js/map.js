@@ -1,7 +1,7 @@
-import {activeStatePage, formAddress} from './form.js';
-import {fetchData} from './data.js';
+import {activeStatePage, formAddress, formOffer, resetButton} from './form.js';
+import {fetchData, setUserFormSubmit} from './data.js';
 import {renderOffer} from './render-offer.js';
-import {showMessage} from './modal.js';
+import {showMessage, showModal, modalSuccessTemplate} from './modal.js';
 
 const SCALE_MAP = 10;
 const MAIN_PIN_ICON_SIZE = [52, 52];
@@ -44,21 +44,27 @@ const mainPinIcon = L.icon({
   iconAnchor: MAIN_PIN_ICON_ANCHOR,
 });
 
-let mainPinMarker = L.marker(
-  {
-    lat: COORD_TOKYO.lat,
-    lng: COORD_TOKYO.lng,
-  },
-  {
-    draggable: true,
-    icon: mainPinIcon,
-  },
-).addTo(map);
+let mainPinMarker;
 
-mainPinMarker.on('moveend', (evt) => {
-  formAddress.value =
-    `${evt.target.getLatLng().lat.toFixed(FRACTION_DIGITS_AT_COORDS)}, ${evt.target.getLatLng().lng.toFixed(FRACTION_DIGITS_AT_COORDS)}`;
-});
+const renderMainPinMarker = () => {
+  mainPinMarker = L.marker(
+    {
+      lat: COORD_TOKYO.lat,
+      lng: COORD_TOKYO.lng,
+    },
+    {
+      draggable: true,
+      icon: mainPinIcon,
+    },
+  ).addTo(map);
+
+  mainPinMarker.on('moveend', (evt) => {
+    formAddress.value =
+      `${evt.target.getLatLng().lat.toFixed(FRACTION_DIGITS_AT_COORDS)}, ${evt.target.getLatLng().lng.toFixed(FRACTION_DIGITS_AT_COORDS)}`;
+  });
+};
+
+renderMainPinMarker();
 
 const processData = async () => {
   let similarOffers = [];
@@ -101,3 +107,27 @@ const processData = async () => {
 };
 
 processData();
+
+const defaultMarkerState = () => {
+  formAddress.value = `${DefaultCoord.lat}, ${DefaultCoord.lng}`;
+  mainPinMarker.remove();
+  renderMainPinMarker();
+};
+
+const defaultFormState = () => {
+  formOffer.reset();
+  defaultMarkerState();
+};
+
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  defaultFormState();
+})
+
+const onSuccess = () => {
+  // showMessage('Данные успешно отправлены');
+  showModal(modalSuccessTemplate);
+  defaultFormState();
+};
+
+setUserFormSubmit(formOffer, onSuccess);

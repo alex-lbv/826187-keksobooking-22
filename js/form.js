@@ -9,6 +9,7 @@ const timeOutOffer = formOffer.querySelector('#timeout');
 export const formAddress = formOffer.querySelector('#address');
 export const roomsNumber = formOffer.querySelector('#room_number');
 export const roomsCapacity = formOffer.querySelector('#capacity');
+export const resetButton = document.querySelector('.ad-form__reset');
 
 const minPrice = {
   bungalow: 0,
@@ -78,5 +79,3 @@ formOffer.addEventListener('change', () => {
 });
 
 inactiveStatePage();
-
-setUserFormSubmit(formOffer);

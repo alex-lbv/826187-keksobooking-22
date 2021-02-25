@@ -15,7 +15,7 @@ export const fetchData = async () => {
     .then((response) => response.json());
 };
 
-export const setUserFormSubmit = (form) => {
+export const setUserFormSubmit = (form, onSuccess) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
@@ -29,7 +29,7 @@ export const setUserFormSubmit = (form) => {
       },
     )
       .then((response) => {
-        (response.ok) ? showMessage('Данные успешно отправлены') : showMessage('Ошибка. Попробуйте ещё раз');
+        (response.ok) ? onSuccess() : showMessage('Ошибка. Попробуйте ещё раз');
       })
       .catch(() => showMessage('Ошибка. Попробуйте ещё раз'));
   })
