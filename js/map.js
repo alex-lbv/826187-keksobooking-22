@@ -1,4 +1,10 @@
-import {activeStatePage, formAddress, formOffer, resetButton} from './form.js';
+import {
+  activeStatePage,
+  formAddress,
+  formOffer,
+  resetButton,
+  resetInputImages
+} from './form.js';
 import {fetchData, setUserFormSubmit} from './data.js';
 import {renderOffer} from './render-offer.js';
 import {showMessage, showModal, modalSuccessTemplate} from './modal.js';
@@ -116,6 +122,7 @@ const defaultMarkerState = () => {
 
 const defaultFormState = () => {
   formOffer.reset();
+  resetInputImages();
   defaultMarkerState();
 };
 

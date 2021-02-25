@@ -29,7 +29,7 @@ export const setUserFormSubmit = (form, onSuccess) => {
       },
     )
       .then((response) => {
-        (response.ok) ? onSuccess() : showModal(modalErrorTemplate);;
+        (response.ok) ? onSuccess() : showModal(modalErrorTemplate);
       })
       .catch(() => showModal(modalErrorTemplate));
   })
