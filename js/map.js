@@ -1,10 +1,9 @@
 import {activeStatePage, formAddress} from './form.js';
-import {similarOffers} from './data.js';
+import {fetchData} from './data.js';
 import {renderOffer} from './render-offer.js';
+import {showMessage} from './modal.js';
 
-const LATITUDE_TOKYO = 35.67860;
-const LONGITUDE_TOKYO = 139.75365;
-const SCALE_MAP = 13;
+const SCALE_MAP = 10;
 const MAIN_PIN_ICON_SIZE = [52, 52];
 const MAIN_PIN_ICON_ANCHOR = [26, 52];
 const MAIN_PIN_ICON_IMAGE = '../img/main-pin.svg';
@@ -12,20 +11,24 @@ const PIN_ICON_SIZE = [40, 40];
 const PIN_ICON_ANCHOR = [20, 40];
 const PIN_ICON_IMAGE = '../img/pin.svg';
 const FRACTION_DIGITS_AT_COORDS = 5;
+const COORD_TOKYO = {
+  lat: 35.67860,
+  lng: 139.75365,
+};
 
 const DefaultCoord = {
-  X: LATITUDE_TOKYO.toFixed(FRACTION_DIGITS_AT_COORDS),
-  Y: LONGITUDE_TOKYO.toFixed(FRACTION_DIGITS_AT_COORDS),
+  lat: COORD_TOKYO.lat.toFixed(FRACTION_DIGITS_AT_COORDS),
+  lng: COORD_TOKYO.lng.toFixed(FRACTION_DIGITS_AT_COORDS),
 };
 /* global L */
 const map = L.map('map-canvas')
   .on('load', () => {
     activeStatePage();
-    formAddress.value = `${DefaultCoord.X}, ${DefaultCoord.Y}`;
+    formAddress.value = `${DefaultCoord.lat}, ${DefaultCoord.lng}`;
   })
   .setView({
-    lat: DefaultCoord.X,
-    lng: DefaultCoord.Y,
+    lat: DefaultCoord.lat,
+    lng: DefaultCoord.lng,
   }, SCALE_MAP);
 
 L.tileLayer(
@@ -41,10 +44,10 @@ const mainPinIcon = L.icon({
   iconAnchor: MAIN_PIN_ICON_ANCHOR,
 });
 
-const mainPinMarker = L.marker(
+let mainPinMarker = L.marker(
   {
-    lat: LATITUDE_TOKYO,
-    lng: LONGITUDE_TOKYO,
+    lat: COORD_TOKYO.lat,
+    lng: COORD_TOKYO.lng,
   },
   {
     draggable: true,
@@ -57,31 +60,44 @@ mainPinMarker.on('moveend', (evt) => {
     `${evt.target.getLatLng().lat.toFixed(FRACTION_DIGITS_AT_COORDS)}, ${evt.target.getLatLng().lng.toFixed(FRACTION_DIGITS_AT_COORDS)}`;
 });
 
-similarOffers.forEach((point) => {
-  const {location} = point;
+const processData = async () => {
+  let similarOffers = [];
 
-  const icon = L.icon({
-    iconUrl: PIN_ICON_IMAGE,
-    iconSize: PIN_ICON_SIZE,
-    iconAnchor: PIN_ICON_ANCHOR,
-  });
+  try {
+    similarOffers = await fetchData();
+  } catch (err) {
+    showMessage('При загрузке данных с сервера произошла ошибка запроса');
+  }
 
-  const marker = L.marker(
-    {
-      lat: location.x,
-      lng: location.y,
-    },
-    {
-      icon,
-    },
-  );
 
-  marker
-    .addTo(map)
-    .bindPopup(
-      renderOffer(point),
+  similarOffers.forEach((point) => {
+    const {location} = point;
+
+    const icon = L.icon({
+      iconUrl: PIN_ICON_IMAGE,
+      iconSize: PIN_ICON_SIZE,
+      iconAnchor: PIN_ICON_ANCHOR,
+    });
+
+    const marker = L.marker(
       {
-        keepInView: true,
+        lat: location.lat,
+        lng: location.lng,
+      },
+      {
+        icon,
       },
     );
-});
+
+    marker
+      .addTo(map)
+      .bindPopup(
+        renderOffer(point),
+        {
+          keepInView: true,
+        },
+      );
+  });
+};
+
+processData();
