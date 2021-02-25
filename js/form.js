@@ -1,4 +1,5 @@
 import {validationInputCapacity} from './validation.js';
+import {setUserFormSubmit} from './data.js';
 
 export const formOffer = document.querySelector('.ad-form');
 const typeOffer = formOffer.querySelector('#type');
@@ -63,17 +64,19 @@ export const activeStatePage = () => {
 
 roomsNumber.addEventListener('input', () => {
   validationInputCapacity(roomsNumber, roomsCapacity);
-})
+});
 
 roomsCapacity.addEventListener('input', () => {
   validationInputCapacity(roomsNumber, roomsCapacity);
-})
+});
 
 formOffer.addEventListener('change', () => {
   changePriceOffer();
   changeTimeOutOffer();
   changeTimeInOffer();
   validationInputCapacity(roomsNumber, roomsCapacity);
-})
+});
 
 inactiveStatePage();
+
+setUserFormSubmit(formOffer);
