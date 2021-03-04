@@ -138,12 +138,6 @@ const processData = async () => {
 
   let similarOffers = data;
 
-  // const inputEventListener = (evt) => {
-  //   filter[evt.target.name] = evt.target.value;
-  //   similarOffers = getFilteredList(data);
-  //   return reinitializationMap(similarOffers.slice(0, MAX_POINTS));
-  // };
-
   const inputEventListener = (evt) => {
     filter[evt.target.name] = evt.target.value;
     similarOffers = getFilteredList(data);
