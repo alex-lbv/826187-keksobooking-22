@@ -17,7 +17,7 @@ import {
   filter,
   getFilteredList
 } from './filter.js';
-import {moveElementToEnd} from './util.js';
+import {moveElementToEnd, throttle} from './util.js';
 
 const MAX_POINTS = 10
 const SCALE_MAP = 10;
@@ -141,21 +141,26 @@ const processData = async () => {
   const inputEventListener = (evt) => {
     filter[evt.target.name] = evt.target.value;
     similarOffers = getFilteredList(data);
-    reinitializationMap(similarOffers.slice(0, MAX_POINTS));
+    return reinitializationMap(similarOffers.slice(0, MAX_POINTS));
   };
 
-  filterHousingType.addEventListener('change', inputEventListener);
-  filterHousingRooms.addEventListener('change', inputEventListener);
-  filterHousingGuests.addEventListener('change', inputEventListener)
-  filterHousingPrice.addEventListener('change', inputEventListener)
+  const featuresInputEventListener = (evt) => {
+    (evt.target.checked) ? filter['features'].push(evt.target.value)
+      : moveElementToEnd(filter['features']).pop();
+    similarOffers = getFilteredList(data);
+    return reinitializationMap(similarOffers.slice(0, MAX_POINTS));
+  };
+
+  const throttledInputEventListener = throttle(inputEventListener, 1000);
+  const throttledFeaturesInputEventListener = throttle(featuresInputEventListener, 1000);
+
+  filterHousingType.addEventListener('change', throttledInputEventListener);
+  filterHousingRooms.addEventListener('change', throttledInputEventListener);
+  filterHousingGuests.addEventListener('change', throttledInputEventListener)
+  filterHousingPrice.addEventListener('change', throttledInputEventListener)
 
   filterFeatures.forEach((el) => {
-    el.addEventListener('change', (evt) => {
-      (evt.target.checked) ? filter['features'].push(evt.target.value)
-        : moveElementToEnd(filter['features']).pop();
-      similarOffers = getFilteredList(data);
-      reinitializationMap(similarOffers.slice(0, MAX_POINTS));
-    });
+    el.addEventListener('change', throttledFeaturesInputEventListener);
   })
 
   renderPoints(similarOffers.slice(0, MAX_POINTS));
