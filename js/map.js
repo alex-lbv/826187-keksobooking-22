@@ -8,7 +8,18 @@ import {
 import {fetchData, setUserFormSubmit} from './data.js';
 import {renderOffer} from './render-offer.js';
 import {showMessage, showModal, modalSuccessTemplate} from './modal.js';
+import {
+  filterHousingType,
+  filterHousingRooms,
+  filterHousingGuests,
+  filterHousingPrice,
+  filterFeatures,
+  filter,
+  getFilteredList
+} from './filter.js';
+import {moveElementToEnd} from './util.js';
 
+const MAX_POINTS = 10
 const SCALE_MAP = 10;
 const MAIN_PIN_ICON_SIZE = [52, 52];
 const MAIN_PIN_ICON_ANCHOR = [26, 52];
@@ -27,30 +38,36 @@ const DefaultCoord = {
   lng: COORD_TOKYO.lng.toFixed(FRACTION_DIGITS_AT_COORDS),
 };
 /* global L */
-const map = L.map('map-canvas')
-  .on('load', () => {
-    activeStatePage();
-    formAddress.value = `${DefaultCoord.lat}, ${DefaultCoord.lng}`;
-  })
-  .setView({
-    lat: DefaultCoord.lat,
-    lng: DefaultCoord.lng,
-  }, SCALE_MAP);
+let map;
+let marker;
+let mainPinMarker;
 
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  },
-).addTo(map);
+const mapInit = () => {
+  map = L.map('map-canvas')
+    .on('load', () => {
+      activeStatePage();
+      formAddress.value = `${DefaultCoord.lat}, ${DefaultCoord.lng}`;
+    })
+    .setView({
+      lat: DefaultCoord.lat,
+      lng: DefaultCoord.lng,
+    }, SCALE_MAP);
+
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+  ).addTo(map);
+};
+
+mapInit();
 
 const mainPinIcon = L.icon({
   iconUrl: MAIN_PIN_ICON_IMAGE,
   iconSize: MAIN_PIN_ICON_SIZE,
   iconAnchor: MAIN_PIN_ICON_ANCHOR,
 });
-
-let mainPinMarker;
 
 const renderMainPinMarker = () => {
   mainPinMarker = L.marker(
@@ -72,17 +89,8 @@ const renderMainPinMarker = () => {
 
 renderMainPinMarker();
 
-const processData = async () => {
-  let similarOffers = [];
-
-  try {
-    similarOffers = await fetchData();
-  } catch (err) {
-    showMessage('При загрузке данных с сервера произошла ошибка запроса');
-  }
-
-
-  similarOffers.forEach((point) => {
+const renderPoints = (array) => {
+  array.forEach((point) => {
     const {location} = point;
 
     const icon = L.icon({
@@ -91,7 +99,7 @@ const processData = async () => {
       iconAnchor: PIN_ICON_ANCHOR,
     });
 
-    const marker = L.marker(
+    marker = L.marker(
       {
         lat: location.lat,
         lng: location.lng,
@@ -110,6 +118,47 @@ const processData = async () => {
         },
       );
   });
+};
+
+const reinitializationMap = (list) => {
+  map.remove();
+  mapInit();
+  renderMainPinMarker();
+  renderPoints(list);
+};
+
+const processData = async () => {
+  let data = [];
+
+  try {
+    data = await fetchData();
+  } catch (err) {
+    showMessage('При загрузке данных с сервера произошла ошибка запроса');
+  }
+
+  let similarOffers = data;
+
+  const inputEventListener = (evt) => {
+    filter[evt.target.name] = evt.target.value;
+    similarOffers = getFilteredList(data);
+    reinitializationMap(similarOffers.slice(0, MAX_POINTS));
+  };
+
+  filterHousingType.addEventListener('change', inputEventListener);
+  filterHousingRooms.addEventListener('change', inputEventListener);
+  filterHousingGuests.addEventListener('change', inputEventListener)
+  filterHousingPrice.addEventListener('change', inputEventListener)
+
+  filterFeatures.forEach((el) => {
+    el.addEventListener('change', (evt) => {
+      (evt.target.checked) ? filter['features'].push(evt.target.value)
+        : moveElementToEnd(filter['features']).pop();
+      similarOffers = getFilteredList(data);
+      reinitializationMap(similarOffers.slice(0, MAX_POINTS));
+    });
+  })
+
+  renderPoints(similarOffers.slice(0, MAX_POINTS));
 };
 
 processData();

@@ -68,3 +68,16 @@ export const changeEndOfWords = (number, words) => {
 export const isEscEvent = (evt) => {
   return evt.key === ('Escape' || 'Esc');
 };
+
+export const moveElementToEnd = (arr) => {
+  let upperBound = arr.length;
+  for (let i = 0; i < upperBound; i++) {
+    if (arr[i] === 0) {
+      arr.push(0);
+      arr.splice(i, 1);
+      upperBound--;
+      i--;
+    }
+  }
+  return arr;
+}
