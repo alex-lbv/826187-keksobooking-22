@@ -2,8 +2,7 @@ import {
   activeStatePage,
   formAddress,
   formOffer,
-  resetButton,
-  resetInputImages
+  resetButton
 } from './form.js';
 import {fetchData, setUserFormSubmit} from './data.js';
 import {renderOffer} from './render-offer.js';
@@ -18,6 +17,7 @@ import {
   getFilteredList
 } from './filter.js';
 import {moveElementToEnd, throttle} from './util.js';
+import {resetInputImages} from './upload-photo.js';
 
 const MAX_POINTS = 10
 const SCALE_MAP = 10;
