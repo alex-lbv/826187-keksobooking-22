@@ -1,4 +1,7 @@
-import {modalErrorTemplate, showModal} from './modal.js';
+import {modalErrorTemplate, modalSuccessTemplate, showModal} from './modal.js';
+import {formAddress, formOffer, resetButton} from './form.js';
+import {resetInputImages} from './upload-photo.js';
+import {renderMainPinMarker, removeMainMarker, DefaultCoord} from './map.js';
 
 const URL_GET_DATA = 'https://22.javascript.pages.academy/keksobooking/data';
 const URL_POST_DATA = 'https://22.javascript.pages.academy/keksobooking';
@@ -15,7 +18,29 @@ export const fetchData = async () => {
     .then((response) => response.json());
 };
 
-export const setUserFormSubmit = (form, onSuccess) => {
+const onSuccess = () => {
+  showModal(modalSuccessTemplate);
+  defaultFormState();
+};
+
+const defaultMarkerState = () => {
+  formAddress.value = `${DefaultCoord.lat}, ${DefaultCoord.lng}`;
+  removeMainMarker();
+  renderMainPinMarker();
+};
+
+const defaultFormState = () => {
+  formOffer.reset();
+  resetInputImages();
+  defaultMarkerState();
+};
+
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  defaultFormState();
+})
+
+export const setUserFormSubmit = (form) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
 

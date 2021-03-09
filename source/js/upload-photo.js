@@ -11,12 +11,6 @@ const imagesDownloadContainer = document.querySelector('.ad-form__photo-containe
 export const imagesDownload = document.querySelector('#images');
 const imagesPreviewTemplate = document.querySelector('.ad-form__photo');
 
-avatarDownload.addEventListener('change', (evt) => {
-  if (evt.target.files.length > 0) {
-    avatarPreview.src = URL.createObjectURL(evt.target.files[0]);
-  }
-});
-
 export const previewImages = (evt) => {
   const imagesCount = imagesDownloadContainer.children;
   imagesPreviewTemplate.style.display = 'none';
@@ -41,8 +35,6 @@ export const previewImages = (evt) => {
   }
 };
 
-imagesDownload.addEventListener('change', previewImages);
-
 export const resetInputImages = () => {
   avatarPreview.src = DEFAULT_SRC_AVATAR;
   const images = document.querySelectorAll('.ad-form__photo img');
@@ -51,3 +43,10 @@ export const resetInputImages = () => {
   }
   imagesPreviewTemplate.style.display = 'block';
 };
+
+avatarDownload.addEventListener('change', (evt) => {
+  if (evt.target.files.length > 0) {
+    avatarPreview.src = URL.createObjectURL(evt.target.files[0]);
+  }
+});
+imagesDownload.addEventListener('change', previewImages);

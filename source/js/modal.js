@@ -27,7 +27,7 @@ export const showMessage = (message) => {
 
   setTimeout(() => {
     messageContainer.remove();
-  }, MESSAGE_SHOW_TIME)
+  }, MESSAGE_SHOW_TIME);
 };
 
 export const showModal = (template) => {
