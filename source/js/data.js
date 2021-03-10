@@ -1,12 +1,12 @@
 import {modalErrorTemplate, modalSuccessTemplate, showModal} from './modal.js';
 import {formAddress, formOffer, resetButton} from './form.js';
 import {resetInputImages} from './upload-photo.js';
-import {renderMainPinMarker, removeMainMarker, DefaultCoord} from './map.js';
+import {renderMainPinMarker, removeMainMarker, DefaultCoords} from './map.js';
 
 const URL_GET_DATA = 'https://22.javascript.pages.academy/keksobooking/data';
 const URL_POST_DATA = 'https://22.javascript.pages.academy/keksobooking';
 
-export const OfferType = {
+export const offerTypes = {
   'palace': 'Дворец',
   'flat': 'Квартира',
   'house': 'Дом',
@@ -24,7 +24,7 @@ const onSuccess = () => {
 };
 
 const defaultMarkerState = () => {
-  formAddress.value = `${DefaultCoord.lat}, ${DefaultCoord.lng}`;
+  formAddress.value = `${DefaultCoords.lat}, ${DefaultCoords.lng}`;
   removeMainMarker();
   renderMainPinMarker();
 };

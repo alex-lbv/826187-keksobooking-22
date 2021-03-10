@@ -1,4 +1,4 @@
-import {OfferType} from './data.js';
+import {offerTypes} from './data.js';
 import {makeElement, changeEndOfWords} from './util.js';
 
 const similarOfferTemplate = document.querySelector('#card').content.querySelector('.popup');
@@ -17,7 +17,7 @@ export const renderOffer = (point) => {
   (offer.price) ? offerPrice.textContent = `${offer.price} ₽/ночь` : offerPrice.remove();
 
   const offerType = offerElement.querySelector('.popup__type');
-  (offer.type.length) ? offerType.textContent = Object.values(OfferType[offer.type]).join('')
+  (offer.type.length) ? offerType.textContent = Object.values(offerTypes[offer.type]).join('')
     : offerType.remove();
 
   const offerRoomsAndGuests = offerElement.querySelector('.popup__text--capacity');

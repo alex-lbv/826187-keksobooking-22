@@ -2,8 +2,10 @@ import {showMessage} from './modal.js';
 
 const MAX_COUNT_IMAGES = 3;
 const DEFAULT_SRC_AVATAR = './img/avatars/default.png';
-const DEFAULT_WIDTH_IMAGE = 40;
-const DEFAULT_HEIGHT_IMAGE = 44;
+const DefaultImageSize = {
+  WIDTH: 40,
+  HEIGHT: 44,
+};
 
 const avatarDownload = document.querySelector('#avatar');
 const avatarPreview = document.querySelector('.ad-form-header__preview img');
@@ -28,8 +30,8 @@ export const previewImages = (evt) => {
     imageContainer.style.display = 'flex';
     imageContainer.style.alignItems = 'center';
     imageContainer.style.justifyContent = 'center';
-    image.width = DEFAULT_WIDTH_IMAGE;
-    image.height = DEFAULT_HEIGHT_IMAGE;
+    image.width = DefaultImageSize.WIDTH;
+    image.height = DefaultImageSize.HEIGHT;
     imageContainer.append(image);
     imagesDownloadContainer.append(imageContainer);
   }

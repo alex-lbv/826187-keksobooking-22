@@ -59,21 +59,23 @@ export const activeStatePage = () => {
   imagesDownload.addEventListener('change', previewImages);
 };
 
-roomsNumber.addEventListener('input', () => {
-  validationInputCapacity(roomsNumber, roomsCapacity);
-});
+export const addFormInputsListeners = () => {
+  roomsNumber.addEventListener('input', () => {
+    validationInputCapacity(roomsNumber, roomsCapacity);
+  });
 
-roomsCapacity.addEventListener('input', () => {
-  validationInputCapacity(roomsNumber, roomsCapacity);
-});
+  roomsCapacity.addEventListener('input', () => {
+    validationInputCapacity(roomsNumber, roomsCapacity);
+  });
 
-formOffer.addEventListener('change', () => {
-  changePriceOffer();
-  changeTimeOutOffer();
-  changeTimeInOffer();
-  validationInputCapacity(roomsNumber, roomsCapacity);
-});
+  formOffer.addEventListener('change', () => {
+    changePriceOffer();
+    changeTimeOutOffer();
+    changeTimeInOffer();
+    validationInputCapacity(roomsNumber, roomsCapacity);
+  });
 
-typeOffer.addEventListener('input', changePriceOffer);
-timeInOffer.addEventListener('input', changeTimeOutOffer);
-timeOutOffer.addEventListener('input', changeTimeInOffer);
+  typeOffer.addEventListener('input', changePriceOffer);
+  timeInOffer.addEventListener('input', changeTimeOutOffer);
+  timeOutOffer.addEventListener('input', changeTimeInOffer);
+};
