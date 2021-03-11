@@ -1,10 +1,9 @@
-const filterForm = document.querySelector('.map__filters');
+export const filterForm = document.querySelector('.map__filters');
 export const filterHousingType = filterForm.querySelector('#housing-type');
 export const filterHousingRooms = filterForm.querySelector('#housing-rooms');
 export const filterHousingGuests = filterForm.querySelector('#housing-guests');
 export const filterHousingPrice = filterForm.querySelector('#housing-price');
-const filterHousingFeatures = filterForm.querySelector('#housing-features');
-export const filterFeatures = filterHousingFeatures.querySelectorAll('input');
+export const filterHousingFeatures = filterForm.querySelector('#housing-features');
 
 export const filter = {
   'housing-type': '',
