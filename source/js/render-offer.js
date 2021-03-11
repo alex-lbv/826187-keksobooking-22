@@ -7,64 +7,64 @@ export const renderOffer = (point) => {
   const {author, offer} = point;
   const offerElement = similarOfferTemplate.cloneNode(true);
 
-  const offerTitle = offerElement.querySelector('.popup__title');
-  (offer.title) ? offerTitle.textContent = offer.title : offerTitle.remove();
+  const offerTitleElement = offerElement.querySelector('.popup__title');
+  (offer.title) ? offerTitleElement.textContent = offer.title : offerTitleElement.remove();
 
-  const offerAddress = offerElement.querySelector('.popup__text--address');
-  (offer.address) ? offerAddress.textContent = offer.address : offerAddress.remove();
+  const offerAddressElement = offerElement.querySelector('.popup__text--address');
+  (offer.address) ? offerAddressElement.textContent = offer.address : offerAddressElement.remove();
 
-  const offerPrice = offerElement.querySelector('.popup__text--price');
-  (offer.price) ? offerPrice.textContent = `${offer.price} ₽/ночь` : offerPrice.remove();
+  const offerPriceElement = offerElement.querySelector('.popup__text--price');
+  (offer.price) ? offerPriceElement.textContent = `${offer.price} ₽/ночь` : offerPriceElement.remove();
 
-  const offerType = offerElement.querySelector('.popup__type');
-  (offer.type.length) ? offerType.textContent = Object.values(offerTypes[offer.type]).join('')
-    : offerType.remove();
+  const offerTypeElement = offerElement.querySelector('.popup__type');
+  (offer.type.length) ? offerTypeElement.textContent = Object.values(offerTypes[offer.type]).join('')
+    : offerTypeElement.remove();
 
-  const offerRoomsAndGuests = offerElement.querySelector('.popup__text--capacity');
+  const offerRoomsAndGuestsElement = offerElement.querySelector('.popup__text--capacity');
   if (offer.rooms && offer.guests) {
-    offerRoomsAndGuests.textContent =
+    offerRoomsAndGuestsElement.textContent =
       `${offer.rooms} ${changeEndOfWords(offer.rooms, ['комната', 'комнаты', 'комнат'])}
     для ${offer.guests} ${changeEndOfWords(offer.guests, ['гостя', 'гостей', 'гостей'])}`;
   } else {
-    offerRoomsAndGuests.remove();
+    offerRoomsAndGuestsElement.remove();
   }
 
-  const offerTime = offerElement.querySelector('.popup__text--time');
-  (offer.checkin.length && offer.checkout.length) ? offerTime.textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`
-    : offerTime.remove();
+  const offerTimeElement = offerElement.querySelector('.popup__text--time');
+  (offer.checkin.length && offer.checkout.length) ? offerTimeElement.textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`
+    : offerTimeElement.remove();
 
-  const offerDescription = offerElement.querySelector('.popup__description');
-  (offer.description) ? offerDescription.textContent = offer.description
-    : offerDescription.remove();
+  const offerDescriptionElement = offerElement.querySelector('.popup__description');
+  (offer.description) ? offerDescriptionElement.textContent = offer.description
+    : offerDescriptionElement.remove();
 
-  const offerAvatar = offerElement.querySelector('.popup__avatar');
-  (author.avatar) ? offerAvatar.src = author.avatar : offerAvatar.remove();
+  const offerAvatarElement = offerElement.querySelector('.popup__avatar');
+  (author.avatar) ? offerAvatarElement.src = author.avatar : offerAvatarElement.remove();
 
-  const photoList = offerElement.querySelector('.popup__photos');
+  const photoListElement = offerElement.querySelector('.popup__photos');
   if (offer.photos.length) {
-    photoList.innerHTML = '';
+    photoListElement.innerHTML = '';
 
     for (let i = 0; i <= offer.photos.length - 1; i++) {
       const photo = makeElement('img', 'popup__photo', false, offer.photos[i]);
       photo.width = 45;
       photo.height = 40;
       photo.alt = 'Фотография жилья';
-      photoList.appendChild(photo);
+      photoListElement.appendChild(photo);
     }
   } else {
-    photoList.remove();
+    photoListElement.remove();
   }
 
-  const featuresList = offerElement.querySelector('.popup__features');
+  const featuresListElement = offerElement.querySelector('.popup__features');
   if (offer.features.length) {
-    featuresList.innerHTML = '';
+    featuresListElement.innerHTML = '';
 
     for (let i = 0; i <= offer.features.length - 1; i++) {
       const feature = makeElement('li', 'popup__feature', `popup__feature--${offer.features[i]}`);
-      featuresList.appendChild(feature);
+      featuresListElement.appendChild(feature);
     }
   } else {
-    featuresList.remove();
+    featuresListElement.remove();
   }
 
   return offerElement;
