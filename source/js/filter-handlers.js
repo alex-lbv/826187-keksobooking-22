@@ -1,5 +1,7 @@
+import throttle from 'lodash/throttle.js';
 import {
   filter,
+  FilterType,
   filterHousingFeatures,
   filterHousingGuests,
   filterHousingPrice,
@@ -7,10 +9,9 @@ import {
   filterHousingType,
   getFilteredList
 } from './filter.js';
-import {throttle} from './util.js';
 import {renderPoints} from './map.js';
 
-const RERENDER_DELAY = 500;
+const RENDER_DELAY = 500;
 const MAX_POINTS = 10;
 
 const renderOffers = (data) => {
@@ -25,13 +26,13 @@ const inputEventListener = (data, evt) => {
 
 const featuresInputEventListener = (data, evt) => {
   if (evt.target.checked) {
-    if (!filter['features'].includes(evt.target.value)) {
-      filter['features'].push(evt.target.value);
+    if (!filter[FilterType.FEATURES].includes(evt.target.value)) {
+      filter[FilterType.FEATURES].push(evt.target.value);
     }
   } else {
-    const index = filter['features'].findIndex((element) => element === evt.target.value);
+    const index = filter[FilterType.FEATURES].findIndex((element) => element === evt.target.value);
     if (index !== -1) {
-      filter['features'].splice(index, 1);
+      filter[FilterType.FEATURES].splice(index, 1);
     }
   }
 
@@ -40,15 +41,15 @@ const featuresInputEventListener = (data, evt) => {
 
 export const addFilterListeners = (data) => {
   filterHousingType.addEventListener('change', throttle(inputEventListener
-    .bind(null, data), RERENDER_DELAY));
+    .bind(null, data), RENDER_DELAY));
   filterHousingRooms.addEventListener('change', throttle(inputEventListener
-    .bind(null, data), RERENDER_DELAY));
+    .bind(null, data), RENDER_DELAY));
   filterHousingGuests.addEventListener('change', throttle(inputEventListener
-    .bind(null, data), RERENDER_DELAY));
+    .bind(null, data), RENDER_DELAY));
   filterHousingPrice.addEventListener('change', throttle(inputEventListener
-    .bind(null, data), RERENDER_DELAY));
+    .bind(null, data), RENDER_DELAY));
   filterHousingFeatures.addEventListener('change', throttle(featuresInputEventListener
-    .bind(null, data), RERENDER_DELAY));
+    .bind(null, data), RENDER_DELAY));
 
   renderOffers(data.slice(0, MAX_POINTS));
 };
