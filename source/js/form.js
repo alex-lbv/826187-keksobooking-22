@@ -1,5 +1,9 @@
 import {validationInputCapacity} from './validation.js';
-import {imagesDownload, previewImages} from './upload-photo.js';
+import {imagesDownload, previewImages, resetInputImages} from './upload-photo.js';
+import {modalErrorTemplate, modalSuccessTemplate, showModal} from './modal.js';
+import {DefaultCoords, removeMainMarker, renderMainPinMarker, renderPoints} from './map.js';
+import {filterForm} from './filter.js';
+import {sendData} from './data.js';
 
 export const formOffer = document.querySelector('.ad-form');
 const typeOffer = formOffer.querySelector('#type');
@@ -59,6 +63,29 @@ export const activeStatePage = () => {
   imagesDownload.addEventListener('change', previewImages);
 };
 
+const onSuccess = (data) => {
+  showModal(modalSuccessTemplate);
+  defaultFormState();
+  defaultFilterFormState(data);
+};
+
+const defaultMarkerState = () => {
+  formAddress.value = `${DefaultCoords.lat}, ${DefaultCoords.lng}`;
+  removeMainMarker();
+  renderMainPinMarker();
+};
+
+const defaultFormState = () => {
+  formOffer.reset();
+  resetInputImages();
+  defaultMarkerState();
+};
+
+const defaultFilterFormState = (data) => {
+  filterForm.reset();
+  renderPoints(data);
+};
+
 export const addFormInputsListeners = () => {
   roomsNumber.addEventListener('input', () => {
     validationInputCapacity(roomsNumber, roomsCapacity);
@@ -78,4 +105,24 @@ export const addFormInputsListeners = () => {
   typeOffer.addEventListener('input', changePriceOffer);
   timeInOffer.addEventListener('input', changeTimeOutOffer);
   timeOutOffer.addEventListener('input', changeTimeInOffer);
+};
+
+export const addResetButtonListener = (data) => {
+  resetButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    defaultFormState();
+    defaultFilterFormState(data);
+  })
+};
+
+export const setUserFormSubmit = (data) => {
+  formOffer.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    sendData(
+      () => onSuccess(data),
+      () => showModal(modalErrorTemplate),
+      new FormData(evt.target),
+    );
+  })
 };
