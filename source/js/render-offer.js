@@ -1,17 +1,55 @@
 import {offerTypes} from './data.js';
 import {makeElement, changeEndOfWords} from './util.js';
 
+const PropertyPhoto = {
+  WIDTH: 45,
+  HEIGHT: 40,
+  ALT: 'Фотография жилья',
+};
 const similarOfferTemplate = document.querySelector('#card').content.querySelector('.popup');
+
+const createPhotoList = (list, photoElement) => {
+  if (list.photos.length) {
+    photoElement.innerHTML = '';
+
+    list.photos.forEach((element) => {
+      const photo = makeElement('img', 'popup__photo', false, element);
+      photo.width = PropertyPhoto.WIDTH;
+      photo.height = PropertyPhoto.HEIGHT;
+      photo.alt = PropertyPhoto.ALT;
+      photoElement.appendChild(photo);
+    });
+  } else {
+    photoElement.remove();
+  }
+};
+
+const createFeatureList = (list, featureElement) => {
+  if (list.features.length) {
+    featureElement.innerHTML = '';
+
+    list.features.forEach((element) => {
+      const feature = makeElement('li', 'popup__feature', `popup__feature--${element}`);
+      featureElement.appendChild(feature);
+    });
+  } else {
+    featureElement.remove();
+  }
+};
+
+const checkElement = (list, listKey, nameElement, method = 'textContent') => {
+  (list[listKey]) ? nameElement[method] = list[listKey] : nameElement.remove();
+};
 
 export const renderOffer = (point) => {
   const {author, offer} = point;
   const offerElement = similarOfferTemplate.cloneNode(true);
 
   const offerTitleElement = offerElement.querySelector('.popup__title');
-  (offer.title) ? offerTitleElement.textContent = offer.title : offerTitleElement.remove();
+  checkElement(offer, 'title', offerTitleElement);
 
   const offerAddressElement = offerElement.querySelector('.popup__text--address');
-  (offer.address) ? offerAddressElement.textContent = offer.address : offerAddressElement.remove();
+  checkElement(offer, 'address', offerAddressElement);
 
   const offerPriceElement = offerElement.querySelector('.popup__text--price');
   (offer.price) ? offerPriceElement.textContent = `${offer.price} ₽/ночь` : offerPriceElement.remove();
@@ -34,38 +72,16 @@ export const renderOffer = (point) => {
     : offerTimeElement.remove();
 
   const offerDescriptionElement = offerElement.querySelector('.popup__description');
-  (offer.description) ? offerDescriptionElement.textContent = offer.description
-    : offerDescriptionElement.remove();
+  checkElement(offer, 'description', offerDescriptionElement);
 
   const offerAvatarElement = offerElement.querySelector('.popup__avatar');
-  (author.avatar) ? offerAvatarElement.src = author.avatar : offerAvatarElement.remove();
+  checkElement(author, 'avatar', offerAvatarElement, 'src');
 
   const photoListElement = offerElement.querySelector('.popup__photos');
-  if (offer.photos.length) {
-    photoListElement.innerHTML = '';
-
-    for (let i = 0; i <= offer.photos.length - 1; i++) {
-      const photo = makeElement('img', 'popup__photo', false, offer.photos[i]);
-      photo.width = 45;
-      photo.height = 40;
-      photo.alt = 'Фотография жилья';
-      photoListElement.appendChild(photo);
-    }
-  } else {
-    photoListElement.remove();
-  }
+  createPhotoList(offer, photoListElement);
 
   const featuresListElement = offerElement.querySelector('.popup__features');
-  if (offer.features.length) {
-    featuresListElement.innerHTML = '';
-
-    for (let i = 0; i <= offer.features.length - 1; i++) {
-      const feature = makeElement('li', 'popup__feature', `popup__feature--${offer.features[i]}`);
-      featuresListElement.appendChild(feature);
-    }
-  } else {
-    featuresListElement.remove();
-  }
+  createFeatureList(offer, featuresListElement);
 
   return offerElement;
 };

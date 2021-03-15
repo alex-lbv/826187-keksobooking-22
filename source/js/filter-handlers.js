@@ -1,7 +1,6 @@
 import throttle from 'lodash/throttle.js';
 import {
   filter,
-  FilterType,
   filterHousingFeatures,
   filterHousingGuests,
   filterHousingPrice,
@@ -15,41 +14,30 @@ const RENDER_DELAY = 500;
 const MAX_POINTS = 10;
 
 const renderOffers = (data) => {
-  const similarOffers = getFilteredList(data);
-  renderPoints(similarOffers.slice(0, MAX_POINTS));
+  const similarOffers = getFilteredList(data, MAX_POINTS);
+  renderPoints(similarOffers);
 };
 
-const inputEventListener = (data, evt) => {
+const getInputEventListener = (data, evt) => {
   filter[evt.target.name] = evt.target.value;
   renderOffers(data);
 };
 
-const featuresInputEventListener = (data, evt) => {
-  if (evt.target.checked) {
-    if (!filter[FilterType.FEATURES].includes(evt.target.value)) {
-      filter[FilterType.FEATURES].push(evt.target.value);
-    }
-  } else {
-    const index = filter[FilterType.FEATURES].findIndex((element) => element === evt.target.value);
-    if (index !== -1) {
-      filter[FilterType.FEATURES].splice(index, 1);
-    }
-  }
-
+const getFeaturesInputEventListener = (data) => {
   renderOffers(data);
 };
 
 export const addFilterListeners = (data) => {
-  filterHousingType.addEventListener('change', throttle(inputEventListener
+  filterHousingType.addEventListener('change', throttle(getInputEventListener
     .bind(null, data), RENDER_DELAY));
-  filterHousingRooms.addEventListener('change', throttle(inputEventListener
+  filterHousingRooms.addEventListener('change', throttle(getInputEventListener
     .bind(null, data), RENDER_DELAY));
-  filterHousingGuests.addEventListener('change', throttle(inputEventListener
+  filterHousingGuests.addEventListener('change', throttle(getInputEventListener
     .bind(null, data), RENDER_DELAY));
-  filterHousingPrice.addEventListener('change', throttle(inputEventListener
+  filterHousingPrice.addEventListener('change', throttle(getInputEventListener
     .bind(null, data), RENDER_DELAY));
-  filterHousingFeatures.addEventListener('change', throttle(featuresInputEventListener
+  filterHousingFeatures.addEventListener('change', throttle(getFeaturesInputEventListener
     .bind(null, data), RENDER_DELAY));
 
-  renderOffers(data.slice(0, MAX_POINTS));
+  renderOffers(data);
 };
