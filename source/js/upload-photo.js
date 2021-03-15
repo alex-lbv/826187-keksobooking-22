@@ -13,7 +13,20 @@ const imagesDownloadContainer = document.querySelector('.ad-form__photo-containe
 export const imagesDownload = document.querySelector('#images');
 const imagesPreviewTemplate = document.querySelector('.ad-form__photo');
 
-export const previewImages = (evt) => {
+const createImageContainer = (evt, i) => {
+  const imageContainer = imagesPreviewTemplate.cloneNode();
+  const image = document.createElement('img');
+  image.src = URL.createObjectURL(evt.target.files[i]);
+  imageContainer.style.display = 'flex';
+  imageContainer.style.alignItems = 'center';
+  imageContainer.style.justifyContent = 'center';
+  image.width = DefaultImageSize.WIDTH;
+  image.height = DefaultImageSize.HEIGHT;
+  imageContainer.append(image);
+  imagesDownloadContainer.append(imageContainer);
+};
+
+export const renderImages = (evt) => {
   const imagesCount = imagesDownloadContainer.children;
   imagesPreviewTemplate.style.display = 'none';
 
@@ -24,25 +37,16 @@ export const previewImages = (evt) => {
       break;
     }
 
-    const imageContainer = imagesPreviewTemplate.cloneNode();
-    const image = document.createElement('img');
-    image.src = URL.createObjectURL(evt.target.files[i]);
-    imageContainer.style.display = 'flex';
-    imageContainer.style.alignItems = 'center';
-    imageContainer.style.justifyContent = 'center';
-    image.width = DefaultImageSize.WIDTH;
-    image.height = DefaultImageSize.HEIGHT;
-    imageContainer.append(image);
-    imagesDownloadContainer.append(imageContainer);
+    createImageContainer(evt, i);
   }
 };
 
 export const resetInputImages = () => {
   avatarPreview.src = DEFAULT_SRC_AVATAR;
   const images = document.querySelectorAll('.ad-form__photo img');
-  for (let i = 0; i < images.length; i++) {
-    images[i].parentElement.remove();
-  }
+
+  images.forEach((image) => image.parentElement.remove());
+
   imagesPreviewTemplate.style.display = 'block';
 };
 
@@ -51,4 +55,4 @@ avatarDownload.addEventListener('change', (evt) => {
     avatarPreview.src = URL.createObjectURL(evt.target.files[0]);
   }
 });
-imagesDownload.addEventListener('change', previewImages);
+imagesDownload.addEventListener('change', renderImages);

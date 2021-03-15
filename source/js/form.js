@@ -1,5 +1,5 @@
-import {validationInputCapacity} from './validation.js';
-import {imagesDownload, previewImages, resetInputImages} from './upload-photo.js';
+import {validateInputCapacity} from './validation.js';
+import {imagesDownload, renderImages, resetInputImages} from './upload-photo.js';
 import {modalErrorTemplate, modalSuccessTemplate, showModal} from './modal.js';
 import {DefaultCoords, removeMainMarker, renderMainPinMarker, renderPoints} from './map.js';
 import {filterForm} from './filter.js';
@@ -25,93 +25,93 @@ const minPrice = {
   palace: 10000,
 };
 
-const changePriceOffer = () => {
+const changePriceOfferHandler = () => {
   priceOffer.min = minPrice[typeOffer.value];
   priceOffer.placeholder = minPrice[typeOffer.value];
 };
 
-const changeTimeOutOffer = () => {
+const changeTimeOutOfferHandler = () => {
   timeOutOffer.value = timeInOffer.value;
 };
 
-const changeTimeInOffer = () => {
+const changeTimeInOfferHandler = () => {
   timeInOffer.value = timeOutOffer.value;
 };
 
-const disabledField = (form, fields) => {
+const disableField = (form, fields) => {
   form.classList.add('ad-form--disabled');
   fields.forEach((field) => {
     field.disabled = true;
   })
 };
 
-const enabledField = (form, fields) => {
+const enableField = (form, fields) => {
   form.classList.remove('ad-form--disabled');
   fields.forEach((field) => {
     field.disabled = false;
   })
 };
 
-export const inactiveStatePage = () => {
-  disabledField(formOffer, formFields);
-  disabledField(mapFilters, mapFiltersFields);
+export const deactivateStatePage = () => {
+  disableField(formOffer, formFields);
+  disableField(mapFilters, mapFiltersFields);
 };
 
-export const activeStatePage = () => {
-  enabledField(formOffer, formFields);
-  enabledField(mapFilters, mapFiltersFields);
-  imagesDownload.addEventListener('change', previewImages);
+export const activateStatePage = () => {
+  enableField(formOffer, formFields);
+  enableField(mapFilters, mapFiltersFields);
+  imagesDownload.addEventListener('change', renderImages);
 };
 
 const onSuccess = (data) => {
   showModal(modalSuccessTemplate);
-  defaultFormState();
-  defaultFilterFormState(data);
+  setDefaultFormState();
+  setDefaultFilterFormState(data);
 };
 
-const defaultMarkerState = () => {
+const setDefaultMarkerState = () => {
   formAddress.value = `${DefaultCoords.lat}, ${DefaultCoords.lng}`;
   removeMainMarker();
   renderMainPinMarker();
 };
 
-const defaultFormState = () => {
+const setDefaultFormState = () => {
   formOffer.reset();
   resetInputImages();
-  defaultMarkerState();
+  setDefaultMarkerState();
 };
 
-const defaultFilterFormState = (data) => {
+const setDefaultFilterFormState = (data) => {
   filterForm.reset();
   renderPoints(data);
 };
 
 export const addFormInputsListeners = () => {
   roomsNumber.addEventListener('input', () => {
-    validationInputCapacity(roomsNumber, roomsCapacity);
+    validateInputCapacity(roomsNumber, roomsCapacity);
   });
 
   roomsCapacity.addEventListener('input', () => {
-    validationInputCapacity(roomsNumber, roomsCapacity);
+    validateInputCapacity(roomsNumber, roomsCapacity);
   });
 
   formOffer.addEventListener('change', () => {
-    changePriceOffer();
-    changeTimeOutOffer();
-    changeTimeInOffer();
-    validationInputCapacity(roomsNumber, roomsCapacity);
+    changePriceOfferHandler();
+    changeTimeOutOfferHandler();
+    changeTimeInOfferHandler();
+    validateInputCapacity(roomsNumber, roomsCapacity);
   });
 
-  typeOffer.addEventListener('input', changePriceOffer);
-  timeInOffer.addEventListener('input', changeTimeOutOffer);
-  timeOutOffer.addEventListener('input', changeTimeInOffer);
+  typeOffer.addEventListener('input', changePriceOfferHandler);
+  timeInOffer.addEventListener('input', changeTimeOutOfferHandler);
+  timeOutOffer.addEventListener('input', changeTimeInOfferHandler);
 };
 
 export const addResetButtonListener = (data) => {
   resetButton.addEventListener('click', (evt) => {
     evt.preventDefault();
-    defaultFormState();
-    defaultFilterFormState(data);
+    setDefaultFormState();
+    setDefaultFilterFormState(data);
   })
 };
 

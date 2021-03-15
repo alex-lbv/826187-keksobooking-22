@@ -1,15 +1,15 @@
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {activeStatePage, formAddress} from './form.js';
+import {activateStatePage, formAddress} from './form.js';
 import {renderOffer} from './render-offer.js';
 
 const SCALE_MAP = 10;
 const MAIN_ICON_SIZES = [52, 52];
 const ANCHOR_POSITION_OF_MAIN_ICON = [26, 52];
-const MAIN_ICON_IMAGE = '../img/main-pin.svg';
+const MAIN_ICON_IMAGE = './img/main-pin.svg';
 const ICON_SIZES = [40, 40];
 const ANCHOR_POSITION_OF_ICONS = [20, 40];
-const ICON_IMAGE = '../img/pin.svg';
+const ICON_IMAGE = './img/pin.svg';
 const FRACTION_DIGITS_AT_COORDS = 5;
 const COORDS_TOKYO = {
   lat: 35.67860,
@@ -44,7 +44,7 @@ export const renderMainPinMarker = () => {
     },
   ).addTo(map);
 
-  mainPinMarker.on('moveend', (evt) => {
+  mainPinMarker.on('drag', (evt) => {
     formAddress.value =
       `${evt.target.getLatLng().lat.toFixed(FRACTION_DIGITS_AT_COORDS)}, ${evt.target.getLatLng().lng.toFixed(FRACTION_DIGITS_AT_COORDS)}`;
   });
@@ -89,7 +89,7 @@ export const removeMainMarker = () => {
 export const mapInit = () => {
   map = L.map('map-canvas')
     .on('load', () => {
-      activeStatePage();
+      activateStatePage();
       formAddress.value = `${DefaultCoords.lat}, ${DefaultCoords.lng}`;
     })
     .setView({
